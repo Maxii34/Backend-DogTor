@@ -1,9 +1,9 @@
 import {  Router } from "express";
-import { prueba } from "../controllers/productos.controllers.js";
+import { crearTurno, listarTurnos } from "../controllers/productos.controllers.js";
 
 const router = Router();
 
 //http://localhost:3000/api/productos/
-router.route("/").get(prueba);
+router.route("/").post(crearTurno).get(listarTurnos);
 
 export default router;
