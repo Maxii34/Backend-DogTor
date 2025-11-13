@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import resultadoValidacion from "./resultadoValidacion.js";
+import Turnos from "../models/Turnos.js";
 
 const validarTurnos = [
   body("nombreDueno")
