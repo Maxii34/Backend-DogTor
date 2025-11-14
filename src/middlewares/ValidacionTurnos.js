@@ -85,16 +85,27 @@ const validarTurnos = [
     .toDate()
     .withMessage("La fecha debe ser válida (formato YYYY-MM-DD)")
     .custom((value) => {
-      const fechaSeleccionada = new Date(value);
-      const hoy = new Date();
-      // Normaliza el día de hoy a medianoche para la comparación (00:00:00)
-      hoy.setHours(0, 0, 0, 0);
+    // Convertir ambas fechas a strings YYYY-MM-DD para comparar sin zona horaria
+    const fechaSeleccionada = new Date(value).toISOString().split('T')[0];
+    const hoy = new Date().toISOString().split('T')[0];
 
-      if (fechaSeleccionada < hoy) {
-        throw new Error("La fecha debe ser hoy o en el futuro");
-      }
-      return true;
-    }),
+    if (fechaSeleccionada < hoy) {
+      throw new Error("La fecha debe ser hoy o en el futuro");
+    }
+    return true;
+  })
+  .custom(async (value, { req }) => {
+    // Validar que no exista ya un turno en esa fecha y horario
+    const turnoExistente = await Turnos.findOne({
+      fecha: value,
+      horario: req.body.horario
+    });
+    
+    if (turnoExistente) {
+      throw new Error("Ya existe un turno para esa fecha y horario");
+    }
+    return true;
+  }),
 
   (req, res, next)=>resultadoValidacion(req, res, next),
 ];

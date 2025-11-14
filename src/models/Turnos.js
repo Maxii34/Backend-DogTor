@@ -61,16 +61,18 @@ const turnosSchema = new Schema(
       required: true,
       validate: {
         validator: function(v) {
-          const hoy = new Date();
-          hoy.setHours(0, 0, 0, 0);
-          return v >= hoy;
-        },
+      // Extraer solo año, mes y día ignorando zona horaria
+      const fechaTurnoStr = new Date(v).toISOString().split('T')[0];
+      const hoyStr = new Date().toISOString().split('T')[0];
+      
+      return fechaTurnoStr >= hoyStr;
+    },
         message: "La fecha debe ser hoy o en el futuro"
       }
     },
     estado: {
       type: String,
-      enum: ["Pendiente", "Confirmado", "Cancelado", "Completado"],
+      enum: ["Pendiente", "Confirmado", "Cancelado"],
       default: "Pendiente",
     },
   },
