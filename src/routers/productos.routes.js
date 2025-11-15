@@ -8,14 +8,16 @@ import {
 } from "../controllers/productos.controllers.js";
 import validacionIDTurnos from "../middlewares/validacionIDTurnos.js";
 import validarTurnos from "../middlewares/ValidacionTurnos.js";
+import validarToken from "../middlewares/validarToken.js";
+
 
 const router = Router();
 
 //http://localhost:3000/api/productos/
-router.route("/").post(validarTurnos, crearTurno).get(listarTurnos);
+router.route("/").post([validarToken,validarTurnos], crearTurno).get(listarTurnos);
 router
   .route("/:id")
-  .delete(validacionIDTurnos, borrarTurno)
+  .delete([validarToken, validacionIDTurnos], borrarTurno)
   .put([validacionIDTurnos, validarTurnos], turnoEditado)
   .get(validacionIDTurnos, obtenerTurno);
 
