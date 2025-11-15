@@ -30,26 +30,45 @@ export const listarUsuarios = async (req, res) => {
 export const iniciarSesion = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Validación de entrada
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email y contraseña son requeridos" });
+    }
+
     // Buscar el usuario por su email
     const usuarioEncontrado = await Usuario.findOne({ email });
-    // Si no se encuentra el usuario, devolver un error
+
+    // Verificar si el usuario existe
     if (!usuarioEncontrado) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+      return res.status(401).json({ message: "Credenciales inválidas" });
     }
-    // Comparar la contraseña proporcionada con la almacenada
-    const passwordCorrecta = bcrypt.compareSync(
+
+    // Comparar la contraseña de forma asíncrona
+    const passwordCorrecta = await bcrypt.compare(
       password,
       usuarioEncontrado.password
     );
-    // Si la contraseña no es correcta, devolver un error
+    // Si no hay contraceña correcta, manda error
     if (!passwordCorrecta) {
-      return res.status(401).json({ message: "Contraseña incorrecta" });
+      return res.status(401).json({ message: "Credenciales inválidas" });
     }
-    //generar el token JWT
-    const token = generarJWT(usuarioEncontrado.email)
-    res.status(200).json({ message: "Inicio de sesión exitoso", token })
+
+    // Generar el token JWT
+    const token = generarJWT(usuarioEncontrado._id);
+
+    res.status(200).json({
+      message: "Inicio de sesión exitoso",
+      token,
+      usuario: {
+        id: usuarioEncontrado._id,
+        email: usuarioEncontrado.email,
+      },
+    });
   } catch (error) {
-    consol.log(error);
+    console.error("Error en inicio de sesión:", error);
     res.status(500).json({ message: "Error al iniciar sesión" });
   }
 };
