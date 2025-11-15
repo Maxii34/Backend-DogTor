@@ -8,4 +8,3 @@ server.app.use('/api', router);
 
 server.listen();
 
-export default server;
