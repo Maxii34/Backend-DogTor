@@ -3,8 +3,9 @@ import router from "./src/routers/index.routes.js";
 
 const server = new Server();
 
-server.listen();
 
 server.app.use('/api', router);
+
+server.listen();
 
 export default server;
