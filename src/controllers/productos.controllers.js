@@ -2,10 +2,13 @@ import Turnos from "../models/Turnos.js";
 
 export const crearTurno = async (req, res) => {
   try {
-    //console.log(req);
     const nuevoTurno = new Turnos(req.body);
-    await nuevoTurno.save();
-    res.status(201).json({ message: "Turno creado exitosamente" });
+    const turnoGuardado = await nuevoTurno.save();
+    
+    res.status(201).json({
+      message: "Turno creado exitosamente",
+      turno: turnoGuardado 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al crear el turno" });
