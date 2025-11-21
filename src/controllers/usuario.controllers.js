@@ -19,7 +19,7 @@ export const crearUsuario = async (req, res) => {
 
 export const listarUsuarios = async (req, res) => {
   try {
-    const usuarios = await Usuario.find();
+    const usuarios = await Usuario.find(); 
     res.status(200).json(usuarios);
   } catch (error) {
     console.error(error);

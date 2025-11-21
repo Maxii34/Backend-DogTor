@@ -18,7 +18,7 @@ router.route("/").post([validarToken,validarTurnos], crearTurno).get(listarTurno
 router
   .route("/:id")
   .delete([validarToken, validacionIDTurnos], borrarTurno)
-  .put([validacionIDTurnos, validarTurnos], turnoEditado)
+  .put([validarToken, validacionIDTurnos, validarTurnos], turnoEditado)
   .get(validacionIDTurnos, obtenerTurno);
 
 export default router;
