@@ -2,6 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const usuarioSchema = new Schema(
   {
+    nombre: {                              
+      type: String,
+      required: true,
+      minLength: 3,
+      maxLength: 100,
+    },
     email: {
       type: String,
       required: true,
@@ -10,18 +16,27 @@ const usuarioSchema = new Schema(
       trim: true,
       match: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
+    telefono: {                            
+      type: String,
+      required: true,
+      minLength: 10,
+      maxLength: 15,
+    },
     password: {
       type: String,
       required: true,
       minLength: 8,
       validate: {
         validator: function (v) {
-          // Al menos: 1 mayúscula, 1 minúscula, 1 número, 1 carácter especial
-          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#.])[A-Za-z\d@$!%*?&#.]{8,}$/.test(
-            v
-          );
+          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#.])[A-Za-z\d@$!%*?&#.]{8,}$/.test(v);
         },
       },
+    },
+    tipo: {                                
+      type: String,
+      required: true,
+      enum: ["usuario", "admin"],          
+      default: "usuario",
     },
   },
   {
